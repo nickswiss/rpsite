@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load home_tags %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-3">Hello, world!</h1>
+            <p>A team of smart ass mother fuckers making cool shit on the reg.</p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for profile in profiles %}
+                <div class="col-lg-4 mini-bio">
+                {% mini_bio profile %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

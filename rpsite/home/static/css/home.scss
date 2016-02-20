@@ -1,0 +1,36 @@
+@mixin alternate($colors) {
+  $len: length($colors);
+  @each $color in $colors {
+    $i: index($colors, $color);
+    &:nth-of-type(#{$len}n + #{$i}) h2 {
+      color: $color;
+    }
+  }
+}
+
+
+.navbar {
+  border-radius: 0;
+}
+
+
+$mb-image-height: 140px;
+$mb-image-width: $mb-image-height;
+$mb-heading-colors: #FF4981, #8E8E93, #5AC8FB;
+
+.mini-bio {
+  margin-bottom: 1.5rem;
+  text-align: center;
+
+  .img-circle {
+    height: $mb-image-height;
+    width: $mb-image-width;
+    margin-bottom: 1rem;
+  }
+
+  .short-description {
+    height: 75px;
+  }
+
+  @include alternate($mb-heading-colors);
+}
