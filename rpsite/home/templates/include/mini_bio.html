@@ -2,4 +2,4 @@
      alt="{{ profile.user.username }}">
 <h2>{{ profile.user.first_name|lower }} {{ profile.user.last_name|lower }}</h2>
 <p class="short-description">{{ profile.short_bio }}</p>
-<p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+<p><a class="btn btn-secondary" href="{% url 'profile' pk=profile.pk %}" role="button">View details &raquo;</a></p>
