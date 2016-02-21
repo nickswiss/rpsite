@@ -6,9 +6,10 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from photo.models import Photo, Album
-
+from blog.models import Blog
 
 PROFILE_PHOTOS_ALBUM = 'profile photos'
+BLOG_NAME = 'My Blog'
 
 
 class Profile(models.Model):
@@ -23,6 +24,7 @@ class Profile(models.Model):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.pk:
             self.profile_photo()  # Make sure there's a 'profile photos' album
+            self.create_blog()
 
         super(Profile, self).save(
             force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields
@@ -41,6 +43,9 @@ class Profile(models.Model):
         except Album.DoesNotExist:
             Album.objects.create(user=self.user, name=PROFILE_PHOTOS_ALBUM)
             return filler
+
+    def create_blog(self):
+        blog = Blog.objects.create(user=self.user, name=BLOG_NAME)
 
 
 class SocialMedia(models.Model):

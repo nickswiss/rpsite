@@ -8,6 +8,10 @@ from django.db import models
 
 class Blog(models.Model):
     user = models.OneToOneField(User)
+    name = models.CharField(max_length=100, default='Blog')
+
+    def __str__(self):
+        return self.name
 
 
 class BlogPost(models.Model):
@@ -16,4 +20,7 @@ class BlogPost(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     content = models.TextField()
+
+    def __str__(self):
+        return self.name
 
