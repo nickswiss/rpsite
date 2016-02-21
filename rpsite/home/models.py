@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from photo.models import Photo, Album
 
 
+PROFILE_PHOTOS_ALBUM = 'profile photos'
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User)
     slug = models.SlugField(blank=True)
@@ -17,20 +20,44 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if not self.pk:
+            self.profile_photo()  # Make sure there's a 'profile photos' album
+
+        super(Profile, self).save(
+            force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields
+        )
+
     def profile_photo(self):
-        album_name = 'profile photos'
         filler = namedtuple('Album', 'image name')._make((
             'data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==',
-            album_name,
+            PROFILE_PHOTOS_ALBUM,
         ))
 
         try:
-            album = Album.objects.get(user=self.user, name=album_name)
+            album = Album.objects.get(user=self.user, name=PROFILE_PHOTOS_ALBUM)
             photo = album.primary_photo()
-            if photo:
-                return photo
-            else:
-                return filler
+            return photo if photo else filler
         except Album.DoesNotExist:
-            Album.objects.create(user=self.user, name=album_name)
+            Album.objects.create(user=self.user, name=PROFILE_PHOTOS_ALBUM)
             return filler
+
+
+class SocialMedia(models.Model):
+    CHOICES = (
+        ('github', 'github'),
+        ('email', 'email'),
+    )
+    name = models.CharField(max_length=24, choices=CHOICES)
+    data = models.CharField(max_length=64)
+    user = models.ForeignKey(User)
+
+    def __str__(self):
+        return ' '.join((self.user.username, self.name))
+
+    def icon(self):
+        icons = {
+            'github': 'github',
+            'email': 'envelope'
+        }
+        return icons[self.name]
